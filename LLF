@@ -1,0 +1,261 @@
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct node
+{
+    int info;
+    struct node * next;
+}node;
+void insert_at_beginning(node**head1, int val)
+{
+    node*temp = (node*)malloc(sizeof(node));
+    temp->info = val;
+    if(*head1 ==NULL)
+    {
+        temp->next = NULL;
+    }
+    else
+    {
+        temp->next =*head1;
+    }
+    *head1=temp;
+}
+void traverse(node *head)
+{
+    while(head!=NULL)
+    {
+        printf("%d ->",head->info);
+        head=head->next;
+    }
+}
+void insert_at_end(node ** head1, int val)
+{
+    node*temp = (node*)malloc(sizeof(node));
+    temp->info = val;
+    temp->next =NULL;
+    if(*head1 ==NULL)
+    {
+        *head1=temp;
+    }
+    else
+    {
+        node *loc = *head1;
+        while(loc->next!=NULL)
+        {
+            loc=loc->next;
+        }
+        loc->next = temp;
+    }
+}
+node*search(node* head, int val)
+{
+    while(head!=NULL)
+    {
+        if(head->info == val) return head;
+        head = head->next;
+    }
+    return NULL;
+}
+void insert_after(node **head1, int val, int ele)
+{
+    node *loc;
+    node *temp;
+    loc = search(*head1,ele);
+    if(loc == NULL) exit(1);
+    temp = (node*)malloc(sizeof(node));
+    temp->info=val;
+    temp->next=loc->next;
+    loc->next = temp;
+}
+void delete_from_beginning(node** head1)
+{
+    if((*head1)==NULL) printf("Node cannot be deleted as List is empty");
+    node * temp = *head1;
+    *head1 =(*head1)->next;
+    free(temp);
+}
+void delete_from_end(node ** head1)
+{
+    node * previous;
+    node * loc = (*head1);
+    if((*head1)==NULL) printf("Empty Linked List cannot be deleted");
+    if((*head1)->next==NULL)
+    {
+        (*head1)=NULL;
+    }
+    else
+    {
+        while(loc->next != NULL)
+        {
+            previous = loc;
+            loc=loc->next;
+        }
+        previous->next=NULL;
+    }
+    free(loc);
+}
+void delete_after_element(node** head1, int ele)
+{
+    node *loc;
+    node *temp;
+    loc = search(*head1,ele);
+    if(loc == NULL) printf("element not present in Linked List to delete");
+    temp = loc->next;
+    loc->next = temp->next;
+    free(temp);
+}
+void delete_entire_list(node **head1)
+{
+    node * temp;
+    while((*head1)!=NULL)
+    {
+        temp= *head1;
+        (*head1)=(*head1)->next;
+        free(temp);
+    }
+}
+int index(node ** head1, int val)
+{
+    int count = 0;
+    while((*head1)!=NULL)
+    {
+        if((*head1)->info == val)
+        return count+1;
+
+        else
+        {
+            (*head1)=(*head1)->next;
+            count++;
+        }
+    }
+    return 0;
+}
+node * reverse(node **head1)
+{
+    node* previous = NULL;
+    node* current = (*head1);
+    node* next = (*head1)->next;
+    while(current !=NULL)
+    {
+        current->next=previous;
+        previous=current;
+        current=next;
+        if(next!=NULL)
+        {
+            next=next->next;
+        }
+    }
+    return previous;
+}
+void reverse_traverse(node *head) {
+    if (head == NULL) return;
+    reverse_traverse(head->next);
+    printf("%d -> ", head->info);
+}
+void main()
+{
+    int option, flag = 1;
+    int val;
+    int ele;
+    int result;
+    node *head = NULL;
+    while (flag)
+    {
+        printf("MENU \n");
+        printf("1 : Insert At Beginning\n");
+        printf("2 : Insert At End\n");
+        printf("3 : Insert After Element\n");
+        printf("4 : Delete At Beginning\n");
+        printf("5 : Delete At End\n");
+        printf("6 : Delete After Element\n");
+        printf("7 : Delete entire List\n");
+        printf("8 : Search An Element\n");
+        printf("9 : Reverse Linked List\n");
+        printf("10 : Print all elements of LL(traverse)\n");
+        printf("11 : Print all elements of LL in reverse order(traverse in reverse order)\n");
+        printf("12 : Exit\n");
+
+        scanf("%d", &option);
+
+        switch (option)
+        {
+
+        case 1: //Insert At Beginning
+                printf("Enter Value to Insert :\n");
+                scanf("%d", &val);
+                insert_at_beginning(&head,val);
+                printf("Element Inserted at Start\n");
+                break;
+
+        case 2: //Insert At End
+                printf("Enter Value to Insert :\n");
+                scanf("%d", &val);
+                insert_at_end(&head,val);
+                printf("Element Inserted at End\n");
+                break;
+
+        case 3: //Insert After
+                printf("Enter value after which to insert :\n");
+                scanf("%d", &ele);
+                printf("Enter Value to Insert :");
+                scanf("%d", &val);
+                insert_after(&head,val,ele);
+                printf("Element Inserted after %d\n",ele);
+                break;
+                
+        case 4: //Delete At Beginning
+                delete_from_beginning(&head);
+                printf("Element Deleted at Start\n");
+                break;
+                
+        case 5: //Delete At End
+                delete_from_end(&head);
+                printf("Element Deleted at End\n");
+                break;
+
+        case 6: //Delete After Element
+                printf("Enter value after which to delete :\n");
+                scanf("%d", &ele);
+                delete_after_element(&head,val);
+                printf("Element Deleted after %d \n",ele);
+                break;
+
+        case 7: //Delete entire List
+                delete_entire_list(&head);
+                break;
+
+        case 8: //Search an element
+                printf("Enter value to be searched for :\n");
+                scanf("%d", &val);
+                result = index(&head,val);
+                if(result)
+                {
+                    printf("Element present at %d position", result);
+                }
+                else
+                {
+                    printf("Element not present in LinkedList");
+                }
+                break;
+
+        case 9: //Reverse LinkedList
+                head = reverse(&head);
+                printf("Linked List has been reversed");
+                break;
+
+        case 10: //Traversing
+                printf("The elements of Linked List are : \n");
+                traverse(head);
+                break;
+
+        case 11: //reverse order traversing
+                printf("The elements of Linked List in reverse are : \n");
+                reverse_traverse(head);
+                break;
+
+        case 12: exit(1);
+        
+        default:
+                printf("Choose a valid operation.");
+        }
+    }
+}
